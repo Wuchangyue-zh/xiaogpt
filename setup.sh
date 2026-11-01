@@ -9,10 +9,14 @@ if ! command -v docker >/dev/null 2>&1; then
 fi
 docker compose version >/dev/null
 docker compose config --quiet
+if [[ ! -f "$project_dir/data/config.json" && ! -t 0 ]]; then
+  printf '%s\n' '首次配置需要交互终端，请在 SSH 终端直接运行 bash setup.sh。'
+  exit 1
+fi
 docker compose build speaker
 if [[ ! -f "$project_dir/data/config.json" ]]; then
-  docker compose run --rm --no-deps -it --entrypoint pdm speaker \
-    run python configure.py
+  docker compose run --rm --no-deps -i --entrypoint python speaker \
+    configure.py
 fi
 docker compose up -d --no-build speaker
 docker compose ps

@@ -154,7 +154,7 @@ def main():
     parser.add_argument("--reconfigure", action="store_true")
     args = parser.parse_args()
     if not sys.stdin.isatty():
-        raise SystemExit("需要交互终端。请运行 docker compose run --rm -it --entrypoint pdm speaker run python configure.py")
+        raise SystemExit("需要交互终端。请运行 docker compose run --rm -i --entrypoint python speaker configure.py")
     os.umask(0o077)
     logging.getLogger("miservice").disabled = True
     try:

@@ -1,9 +1,11 @@
 FROM python:3.14
 
 WORKDIR /app
-COPY pyproject.toml pdm.lock README.md ./
-RUN pip install --no-cache-dir pdm==2.29.2 && \
-    pdm install --prod --no-self --frozen-lockfile
+ENV VIRTUAL_ENV=/app/.venv
+ENV PATH="/app/.venv/bin:$PATH"
+RUN python -m venv /app/.venv
+COPY requirements.txt ./
+RUN python -m pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 ENV HOME=/config \
@@ -12,5 +14,5 @@ ENV HOME=/config \
     XIAOGPT_SMART_ROOT=/config/smart_voice \
     PYTHONUNBUFFERED=1
 VOLUME /config
-ENTRYPOINT ["pdm", "run", "python", "runtime.py"]
+ENTRYPOINT ["python", "runtime.py"]
 CMD ["--config", "/config/config.json"]

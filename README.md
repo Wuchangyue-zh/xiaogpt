@@ -37,7 +37,7 @@ bash setup.sh
 
 `setup.sh` 会：
 
-1. 从当前仓库源码和 `pdm.lock` 构建本地镜像，不依赖预先部署的 XiaoGPT 服务或上游成品镜像。
+1. 从当前仓库源码和冻结的 `requirements.txt` 构建本地镜像，依赖来自同一份 `pdm.lock`，不依赖预先部署的 XiaoGPT 服务或上游成品镜像。
 2. 首次运行时提示输入自己的小米账号、密码和验证码，自动列出设备；有多台音箱时选择编号。
 3. 自动填写所选设备的 hardware 和 miotDID，提示输入自己的 DeepSeek Key，可选填写常住城市。
 4. 真实验证联网搜索和模型回答，成功后才保存运行配置，随后启动服务。
@@ -64,7 +64,7 @@ data/
 
 ```bash
 docker compose build speaker
-docker compose run --rm --no-deps -it --entrypoint pdm speaker run python configure.py
+docker compose run --rm --no-deps -i --entrypoint python speaker configure.py
 docker compose up -d --no-build speaker
 ```
 
@@ -147,7 +147,7 @@ docker compose up -d --build speaker
 
 ```bash
 docker compose stop speaker
-docker compose run --rm --no-deps -it --entrypoint pdm speaker run python configure.py --reconfigure
+docker compose run --rm --no-deps -i --entrypoint python speaker configure.py --reconfigure
 docker compose up -d --no-build speaker
 ```
 
