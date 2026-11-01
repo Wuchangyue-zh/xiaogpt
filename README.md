@@ -2,9 +2,7 @@
 
 把小爱音箱接入 DeepSeek，支持按需联网、上下文追问、复杂问题思考和适合音箱播报的中文回答。
 
-本仓库包含 **完整 XiaoGPT 上游源码、依赖锁文件、Dockerfile、Compose、首次配置向导和增强代码**。新用户只需克隆本仓库，在自己的服务器上构建和配置，不需要先下载原项目或准备另一个已经运行的 XiaoGPT。
-
-基于 [yihong0618/xiaogpt](https://github.com/yihong0618/xiaogpt)，保留 MIT 许可证及上游版权。源码来源、快照版本和修改范围见 [UPSTREAM.md](UPSTREAM.md)，原始说明见 [docs/upstream/README.md](docs/upstream/README.md)。
+本仓库包含 **完整运行源码、依赖锁文件、Dockerfile、Compose、首次配置向导和联网语音功能**。克隆后即可在自己的服务器上构建、配置和启动。
 
 ## 功能
 
@@ -25,7 +23,7 @@
 2. 音箱已经在小爱音箱 App 或米家绑定，知道对应小米账号及密码，能接收登录验证码。
 3. 自己的 [DeepSeek API Key](https://platform.deepseek.com/api_keys)，账户有可用余额；服务器能够访问小米、DeepSeek、Docker Hub 和 Python 包下载源。
 
-当前主要验证 Linux amd64 和小米 AI 音箱 `S12A`。上游其他型号的源码和指令映射也已保留；首次配置会识别账号下的 hardware，其他型号的连续唤醒和原声打断效果需实际验证。
+当前主要验证 Linux amd64 和小米 AI 音箱 `S12A`。项目也保留了其他型号的指令映射；首次配置会识别账号下的 hardware，其他型号的连续唤醒和原声打断效果需实际验证。
 
 在交互式 SSH 终端执行：
 
@@ -37,7 +35,7 @@ bash setup.sh
 
 `setup.sh` 会：
 
-1. 从当前仓库源码和冻结的 `requirements.txt` 构建本地镜像，依赖来自同一份 `pdm.lock`，不依赖预先部署的 XiaoGPT 服务或上游成品镜像。
+1. 从当前仓库源码和冻结的 `requirements.txt` 构建本地镜像，依赖版本由 `pdm.lock` 和 `requirements.txt` 锁定。
 2. 首次运行时提示输入自己的小米账号、密码和验证码，自动列出设备；有多台音箱时选择编号。
 3. 自动填写所选设备的 hardware 和 miotDID，提示输入自己的 DeepSeek Key，可选填写常住城市。
 4. 真实验证联网搜索和模型回答，成功后才保存运行配置，随后启动服务。
@@ -79,7 +77,7 @@ git -C /opt/xiaogpt-upgrade/xiaogpt pull --ff-only origin main
 bash /opt/xiaogpt-upgrade/xiaogpt/install.sh
 ```
 
-`install.sh` 保留上一版兼容方式：用服务器上已固定的上游镜像执行验证，备份现有配置，再更新现有音箱服务，不调整 OpenClaw/FastGPT 等其他服务。新用户使用的是上面的 `setup.sh`，两条入口用途不同。
+`install.sh` 保留上一版兼容方式：用服务器上已固定的镜像执行验证，备份现有配置，再更新现有音箱服务，不调整 OpenClaw/FastGPT 等其他服务。新用户使用的是上面的 `setup.sh`，两条入口用途不同。
 
 旧部署详细说明见 [docs/EXISTING_INSTALL.md](docs/EXISTING_INSTALL.md)。旧部署回退：
 
@@ -159,8 +157,8 @@ docker compose up -d --no-build speaker
 
 联网查询会消耗自己的 DeepSeek 余额，包括规划、回答、思考 token，以及成功的 Search/Fetch 请求。价格可能变化，请以 [官方价格](https://api-docs.deepseek.com/zh-cn/quick_start/pricing/) 和账单为准。复杂思考和联网可能增加首句等待时间。
 
-上游所有模型、TTS、工具源码以及冻结依赖已纳入仓库，外部 Python 依赖在构建时从包源安装。当前 Docker 入口是 `runtime.py`，集中应用兼容修复和增强适配；原始上游能力仍可查阅原文档。
+模型、语音服务、工具源码和冻结依赖均包含在仓库中，外部 Python 依赖在镜像构建时安装。当前 Docker 入口是 `runtime.py`，统一加载语音交互和联网功能。
 
-GitHub Actions 从干净 Linux 环境构建当前源码镜像，检查首次配置入口、上游测试及增强测试，不使用真实账号或 API Key，也不推送镜像到第三方账号。测试说明见 [VALIDATION.md](VALIDATION.md)。
+GitHub Actions 从干净 Linux 环境构建当前源码镜像，检查首次配置入口、核心功能及联网语音测试，不使用真实账号或 API Key，也不推送镜像到第三方账号。测试说明见 [VALIDATION.md](VALIDATION.md)。
 
 离线测试不等于所有音箱型号和账号地区都已实测；实际登录验证、网络可达性、设备固件、搜索质量和听感仍需自己的设备验收。
