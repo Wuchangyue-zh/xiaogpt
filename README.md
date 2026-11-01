@@ -1,8 +1,37 @@
-# XiaoGPT Voice
+# XiaoGPT Voice · 小爱音箱 DeepSeek 语音助手
 
-由 **Wuchangyue-zh** 维护的小爱音箱 DeepSeek 语音助手。
+[![Build and test](https://github.com/Wuchangyue-zh/xiaogpt/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Wuchangyue-zh/xiaogpt/actions/workflows/ci.yml)
+[![Preview](https://img.shields.io/badge/release-v2.0.0--preview.1-orange)](https://github.com/Wuchangyue-zh/xiaogpt/releases/tag/v2.0.0-preview.1)
+[![Python](https://img.shields.io/badge/Python-3.14-blue)](pyproject.toml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
-在 Linux 服务器上运行，通过小米云端接收语音问题，按需联网查询，再由音箱直接播报回答。项目包含设备通信、对话引擎、语音调度、配置向导、Docker 部署和自动化测试。
+**让小爱音箱用 DeepSeek 回答：联网搜索、上下文追问、连续对话，Docker 部署，无需刷机。**
+
+由 **Wuchangyue-zh** 维护。程序运行在你的 Linux 服务器上，通过小米云端接收问题并使用音箱原生语音播报。
+
+[快速开始](#快速开始) · [设备支持](#设备支持) · [使用示例](#日常使用) · [提示词配置](#配置和提示词) · [发布说明](https://github.com/Wuchangyue-zh/xiaogpt/releases/tag/v2.0.0-preview.1)
+
+## 快速开始
+
+准备好 **Linux、Git、Docker Compose、绑定音箱的小米账号和自己的 DeepSeek API Key**，在交互式 SSH 终端执行：
+
+```bash
+git clone https://github.com/Wuchangyue-zh/xiaogpt.git
+cd xiaogpt
+bash setup.sh
+```
+
+向导会引导登录、选择音箱、填写 Key、验证联网，然后启动服务。服务器无需为此服务开放公网入站端口，家中也无需常开电脑。
+
+## 设备支持
+
+| 设备 hardware | 配置方式 | 当前范围 |
+| --- | --- | --- |
+| S12A | 自动发现并配置 | 首要适配型号，提供文本播报和唤醒动作模板 |
+| S12 | 自动发现并配置 | 提供模板，仍需独立实机反馈 |
+| 其他型号 | 手动指定设备动作 | 尚未提供自动适配，不保证固件兼容 |
+
+**当前为预览版本。** 已通过源码镜像构建、包安装和 44 项离线测试；新版本完整听感及更多固件、账号地区仍需实机反馈。[查看自动化验证](https://github.com/Wuchangyue-zh/xiaogpt/actions/runs/41291093896)
 
 ## 能做什么
 
@@ -13,23 +42,23 @@
 - 自动发现账号下的音箱，使用每位用户自己的账号、设备和 API Key。
 - 不需要常开的家庭电脑，不发布公网入站端口。
 
+
+## 工作方式
+
+```mermaid
+flowchart LR
+    A["小爱音箱"] <--> B["小米云端"]
+    B <--> C["XiaoGPT Voice"]
+    C <--> D["DeepSeek 对话与搜索"]
+```
+
 ## 准备条件
 
 1. Linux 服务器，已安装 Git、Docker Engine 和 Docker Compose 插件；当前用户可以使用 Docker。安装说明：[Debian](https://docs.docker.com/engine/install/debian/)、[Ubuntu](https://docs.docker.com/engine/install/ubuntu/)。
 2. 音箱已经绑定小米账号，知道账号密码并能接收登录验证码。
 3. 自己的 [DeepSeek API Key](https://platform.deepseek.com/api_keys) 和可用余额，服务器能访问小米、DeepSeek、Docker Hub 和 Python 包源。
 
-目前自动配置支持小米 AI 音箱 `S12A` / `S12`，主要设备验证基于 S12A。其他型号需要确认自己的文本播报和唤醒动作编号后手动配置，不保证所有固件通用。
-
-## 部署
-
-在交互式 SSH 终端执行：
-
-```bash
-git clone https://github.com/Wuchangyue-zh/xiaogpt.git
-cd xiaogpt
-bash setup.sh
-```
+## 部署详解
 
 脚本会从源码构建镜像，首次运行时依次引导登录小米、选择音箱、输入 DeepSeek Key、验证真实联网，然后保存配置并启动。
 
