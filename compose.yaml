@@ -1,23 +1,18 @@
 name: xiaogpt-voice
 services:
   speaker:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     image: xiaogpt-voice:local
     restart: unless-stopped
     init: true
     environment:
-      HOME: /config
-      XIAOGPT_CONFIG_DIR: /config
-      XIAOGPT_MI_TOKEN_PATH: /config/.mi.token
-      XIAOGPT_SMART_ROOT: /config/smart_voice
+      XIAOGPT_DATA_DIR: /config
       PYTHONUNBUFFERED: "1"
     volumes:
       - ./data:/config
-    command: ["--config", "/config/config.json"]
+    command: ["run"]
     cpus: 1.0
-    mem_limit: 2g
+    mem_limit: 1g
     logging:
       driver: json-file
       options:

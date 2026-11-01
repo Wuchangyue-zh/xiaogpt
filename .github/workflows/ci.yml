@@ -1,0 +1,30 @@
+name: Build and test
+on:
+  push:
+    branches: [main, project-rewrite]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  voice:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Check deployment files
+        run: |
+          bash -n setup.sh
+          docker compose config --quiet
+      - name: Build source image
+        run: docker build --progress=plain -t xiaogpt-voice:local .
+      - name: Check commands through Docker and Compose
+        run: |
+          docker run --rm xiaogpt-voice:local --help
+          docker run --rm xiaogpt-voice:local init --help
+          docker compose run --rm --no-deps -i -T speaker init --help
+      - name: Run offline tests including Xiaomi token refresh
+        run: docker run --rm --entrypoint python xiaogpt-voice:local -m unittest discover -s tests -v
+      - name: Verify installed package and default resources
+        run: |
+          docker run --rm --entrypoint sh xiaogpt-voice:local -c 'python -m pip install --no-deps . && cd /tmp && xiaogpt-voice --help && python -c "from importlib.resources import files; assert files(\"xiaogpt_voice\").joinpath(\"defaults/system_prompt.txt\").is_file()"'

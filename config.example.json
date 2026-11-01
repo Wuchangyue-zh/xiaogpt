@@ -1,21 +1,18 @@
 {
-  "hardware": "S12A",
-  "mi_did": "",
-  "account": "",
-  "openai_key": "",
-  "api_base": "https://api.deepseek.com",
-  "bot": "chatgptapi",
-  "gpt_options": {
-    "model": "deepseek-flash",
-    "max_tokens": 2048,
-    "extra_body": {"thinking": {"type": "disabled"}}
+  "schema_version": 2,
+  "device": {
+    "hardware": "S12A",
+    "miot_did": "",
+    "name": "小爱音箱",
+    "text_action": [5, 1],
+    "wake_action": [5, 3]
   },
-  "tts": "mi",
-  "use_command": false,
-  "mute_xiaoai": true,
-  "stream": true,
-  "keyword": ["请问"],
-  "start_conversation": "开始持续对话",
-  "end_conversation": "结束持续对话",
-  "verbose": false
+  "xiaomi": {"account": ""},
+  "deepseek": {"api_key": "", "base_url": "https://api.deepseek.com"},
+  "voice": {
+    "trigger_words": ["请问"],
+    "start_phrases": ["开始持续对话", "开始连续对话"],
+    "end_phrases": ["结束持续对话", "结束连续对话"]
+  },
+  "poll_interval_seconds": 1.2
 }
