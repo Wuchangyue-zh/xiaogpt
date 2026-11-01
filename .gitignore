@@ -1,0 +1,28 @@
+# Python caches and local environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Server credentials and generated runtime data
+config.json
+.env
+.env.*
+!.env.example
+.mi.token
+*.token
+config/
+smart_voice_backups/
+.smart-stage.*/
+.smart_voice_latest_backup
+last_sources.json
+last_sources.json.tmp
+*.smart-tmp
+*.log
+
+# Editor and OS files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
