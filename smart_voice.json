@@ -1,0 +1,16 @@
+{
+  "model": "deepseek-flash",
+  "thinking": "adaptive",
+  "max_answer_tokens": 2048,
+  "max_thinking_tokens": 8192,
+  "max_searches": 2,
+  "search_count": 5,
+  "fetch_for_detail": true,
+  "history_turns": 10,
+  "history_chars": 24000,
+  "history_idle_minutes": 30,
+  "home_city": "",
+  "model_timeout_seconds": 90,
+  "search_timeout_seconds": 18,
+  "max_spoken_chars": 1600
+}
