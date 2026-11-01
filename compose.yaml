@@ -1,0 +1,25 @@
+name: xiaogpt-voice
+services:
+  speaker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: xiaogpt-voice:local
+    restart: unless-stopped
+    init: true
+    environment:
+      HOME: /config
+      XIAOGPT_CONFIG_DIR: /config
+      XIAOGPT_MI_TOKEN_PATH: /config/.mi.token
+      XIAOGPT_SMART_ROOT: /config/smart_voice
+      PYTHONUNBUFFERED: "1"
+    volumes:
+      - ./data:/config
+    command: ["--config", "/config/config.json"]
+    cpus: 1.0
+    mem_limit: 2g
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"

@@ -10,6 +10,7 @@ import asyncio
 import contextlib
 import json
 import logging
+import os
 import re
 import time
 from datetime import datetime, timedelta, timezone
@@ -165,7 +166,7 @@ class SmartDeepSeekBot:
 
     @classmethod
     def from_config(cls, config):
-        return cls(config)
+        return cls(config, root=Path(os.environ.get("XIAOGPT_SMART_ROOT", str(ROOT))))
 
     def has_history(self) -> bool:
         # A system context always exists. Prevent XiaoGPT appending its legacy
@@ -445,14 +446,26 @@ class SmartDeepSeekBot:
         return "".join([part async for part in self.ask_stream(query, **options)])
 
 
-def install():
+def install(*, official_only=False):
     """Register this adapter without replacing XiaoGPT's Xiaomi/speaker code."""
     import xiaogpt.bot as bots
     from xiaogpt.xiaogpt import MiGPT
 
     if getattr(MiGPT, "_smart_voice_installed", False):
         return
-    bots.BOTS["chatgptapi"] = SmartDeepSeekBot
+    if official_only:
+        original_chatgpt = bots.BOTS["chatgptapi"]
+
+        class ProviderAwareBot:
+            @classmethod
+            def from_config(cls, config):
+                if urlparse(config.api_base or "").hostname == "api.deepseek.com":
+                    return SmartDeepSeekBot.from_config(config)
+                return original_chatgpt.from_config(config)
+
+        bots.BOTS["chatgptapi"] = ProviderAwareBot
+    else:
+        bots.BOTS["chatgptapi"] = SmartDeepSeekBot
     original_ask = MiGPT.ask_gpt
     original_speak = MiGPT.speak
     original_wake = MiGPT.wakeup_xiaoai

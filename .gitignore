@@ -13,12 +13,17 @@ config.json
 .mi.token
 *.token
 config/
+data/
+xiao_config.json
+xiaogptconfig.json
+xiao_config.yaml
 smart_voice_backups/
 .smart-stage.*/
 .smart_voice_latest_backup
 last_sources.json
 last_sources.json.tmp
 *.smart-tmp
+*.setup-tmp
 *.log
 
 # Editor and OS files

@@ -1,0 +1,21 @@
+{
+  "hardware": "S12A",
+  "mi_did": "",
+  "account": "",
+  "openai_key": "",
+  "api_base": "https://api.deepseek.com",
+  "bot": "chatgptapi",
+  "gpt_options": {
+    "model": "deepseek-flash",
+    "max_tokens": 2048,
+    "extra_body": {"thinking": {"type": "disabled"}}
+  },
+  "tts": "mi",
+  "use_command": false,
+  "mute_xiaoai": true,
+  "stream": true,
+  "keyword": ["请问"],
+  "start_conversation": "开始持续对话",
+  "end_conversation": "结束持续对话",
+  "verbose": false
+}
